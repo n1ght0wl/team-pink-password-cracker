@@ -3,6 +3,7 @@ from urllib.request import urlopen
 import json
 import random
 import string
+from getpass import getpass 
 
 def readwordlist(url):
     try:
@@ -28,7 +29,8 @@ def bruteforce(guesspasswordlist, actual_password_hash):
 
 url = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.json'
 
-actual_password = str(input("Please enter your password: "))
+#actual_password = str(input("Please enter your password: "))
+actual_password = getpass("Please enter your password: ")
 actual_password_hash = hash(actual_password)
 
 passwordlist = readwordlist(url).decode("utf-8")
