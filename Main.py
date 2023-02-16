@@ -4,7 +4,7 @@ import json
 import random
 import string
 import time
-from getpass import getpass 
+import pwinput
 
 #----- Functions -------# 
 
@@ -93,7 +93,7 @@ pw_list3 = return_as_list(url3)
 ultimate_password_list = merge_lists(pw_list1, pw_list2, pw_list3)
 
 '''get user's password'''
-actual_password = getpass("Please enter your password: ")
+actual_password = pwinput.pwinput(prompt='Please enter your password: ')
 
 '''hash user's password'''
 actual_password_hash = hash(actual_password)
