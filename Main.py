@@ -84,7 +84,7 @@ def validate_password(password):
 '''input common password lists as url'''
 url1 = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.json'
 url2 = 'https://raw.githubusercontent.com/berzerk0/Probable-Wordlists/master/Real-Passwords/Top12Thousand-probable-v2.txt'
-url3 = ''
+url3 = 'https://github.com/danielmiessler/SecLists/blob/master/Passwords/probable-v2-top12000.txt'
 
 pw_list1 = return_as_list(url1)
 pw_list2 = return_as_list(url2)
