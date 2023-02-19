@@ -18,3 +18,11 @@
 - requirements.txt file 
 - gui
 - more sec considerations? 
+
+## Requirements 
+
+python >= 3.11.1
+
+pwinput>=1.0.2
+
+`pip3 install -r requirements.txt`
