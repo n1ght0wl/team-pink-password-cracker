@@ -5,6 +5,7 @@ import random
 import string
 import time
 import pwinput
+import tkinter 
 
 #----- Functions -------# 
 
@@ -79,6 +80,35 @@ def validate_password(password):
     return valid
 
 
+def get_user_password_and_start_bruteforce(common_password_list):
+    '''get user's password'''
+    actual_password = pwinput.pwinput(prompt='Please enter your password: ')
+
+    '''hash user's password'''
+    actual_password_hash = hash(actual_password)
+
+    '''Running the Brute Force attack from common password list'''
+    bruteforce(password_list, actual_password_hash)
+
+    '''Continue bruteforcing if password is not in common password list'''
+    print("Not a common password but we're not quite in the clear yet...")
+    list_of_possible_pw_characters = list(string.digits + string.ascii_lowercase + string.ascii_uppercase)
+    current_pw_guess = ""
+
+    bruteforce_phase2_start_time = time.time() # mark start of bruteforce phase 2
+
+    while hash(current_pw_guess) != actual_password_hash:
+        bruteforce_attack_time_in_minutes = 1 # duration of bruteforce before timeout  
+        current_pw_guess = random.choices(list_of_possible_pw_characters, k=len(actual_password))
+        current_pw_guess = "".join(current_pw_guess)
+        current_time = time.time()
+        if current_time - bruteforce_phase2_start_time > bruteforce_attack_time_in_minutes * 60 : 
+            print(f"{bruteforce_attack_time_in_minutes} minute(s) timeout! Your password appears to be secure, well done.")
+            exit()
+
+    print("Hey! Your password is:", current_pw_guess,
+        "\n please change this. It's not common but you've been hacked now!")
+
 #----- Main -------# 
 
 '''input common password lists as url'''
@@ -90,32 +120,9 @@ pw_list1 = return_as_list(url1)
 pw_list2 = return_as_list(url2)
 pw_list3 = return_as_list(url3)
 
-ultimate_password_list = merge_lists(pw_list1, pw_list2, pw_list3)
+ultimate_common_password_list = merge_lists(pw_list1, pw_list2, pw_list3)
 
-'''get user's password'''
-actual_password = pwinput.pwinput(prompt='Please enter your password: ')
+get_user_password_and_start_bruteforce(ultimate_common_password_list)
 
-'''hash user's password'''
-actual_password_hash = hash(actual_password)
-
-'''Running the Brute Force attack from common password list'''
-bruteforce(ultimate_password_list, actual_password_hash)
-
-'''Continue bruteforcing if password is not in common password list'''
-list_of_possible_pw_characters = list(string.digits + string.ascii_lowercase + string.ascii_uppercase)
-current_pw_guess = ""
-
-bruteforce_phase2_start_time = time.time() # mark start of bruteforce phase 2
-
-while hash(current_pw_guess) != actual_password_hash:
-    current_pw_guess = random.choices(list_of_possible_pw_characters, k=len(actual_password))
-    current_pw_guess = "".join(current_pw_guess)
-    current_time = time.time()
-    if current_time - bruteforce_phase2_start_time > 60 : #timeout after 1 minute 
-        print("Timeout! Your password appears to be secure, well done.")
-        exit()
-
-print("Hey! Your password is:", current_pw_guess,
-      "\n please change this. It's not common but you've been hacked now!")
 
 
