@@ -5,8 +5,19 @@ import random
 import string
 import time
 import pwinput
+from tkinter import * 
+from threading import Thread
+from PIL import Image, ImageTk
+import sys
+import os
 
 #----- Functions -------# 
+
+
+def restart_app():
+    python = sys.executable
+    os.execl(python, python, *sys.argv)
+
 
 '''reads a worldlist via url and returns it as a file'''
 def readwordlist(url):
@@ -21,19 +32,6 @@ def readwordlist(url):
 def hash(wordlistpassword):
     result = hashlib.sha256(wordlistpassword.encode('utf-8')).hexdigest()
     return result
-
-'''implementation of the bruteforce technique'''
-def bruteforce(list_of_passwords_to_check_against, actual_password_hash):
-    pw_found = False
-    for password in list_of_passwords_to_check_against:
-        if hash(password) == actual_password_hash:
-            pw_found = True
-            print("Hey! your password is:", password,
-                "\n please change this, it's a commonly used password!")
-            exit()          
-    if pw_found == False: 
-        pass
-        
 
 
 '''merge three lists without duplicates'''
@@ -79,43 +77,151 @@ def validate_password(password):
     return valid
 
 
+def get_user_password_and_start_bruteforce():
+    global pw_found
+    global test
+
+    '''create common password list'''
+    url1 = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.json'
+    url2 = 'https://raw.githubusercontent.com/berzerk0/Probable-Wordlists/master/Real-Passwords/Top12Thousand-probable-v2.txt'
+    url3 = 'https://github.com/danielmiessler/SecLists/blob/master/Passwords/probable-v2-top12000.txt'
+
+    pw_list1 = return_as_list(url1)
+    pw_list2 = return_as_list(url2) 
+    pw_list3 = return_as_list(url3)
+
+    common_password_list = merge_lists(pw_list1, pw_list2, pw_list3) 
+
+    '''get user's password'''
+    #actual_password = pwinput.pwinput(prompt='Please enter your password: ')
+    actual_password = user_input.get()
+
+    '''hash user's password'''
+    actual_password_hash = hash(actual_password)
+    
+    '''Running the Brute Force attack from common password list'''
+    bruteforce(common_password_list, actual_password_hash)
+
+    if pw_found == True:
+        time.sleep(120)
+
+    if pw_found == False:
+       
+        '''Continue bruteforcing if password is not in common password list'''
+        test.config(text="Not a common password but we're not quite in the clear yet...")
+        print("Not a common password but we're not quite in the clear yet...")
+        list_of_possible_pw_characters = list(string.digits + string.ascii_lowercase + string.ascii_uppercase)
+        current_pw_guess = ""
+
+        bruteforce_phase2_start_time = time.time() # mark start of bruteforce phase 2
+
+        while hash(current_pw_guess) != actual_password_hash:
+            test.config(text="Not a common password but we're not")
+            test2.config(text="quite in the clear yet...")
+            
+            bruteforce_attack_time_in_minutes = 1 # duration of bruteforce before timeout  
+            current_pw_guess = random.choices(list_of_possible_pw_characters, k=len(actual_password))
+            test2.config(text="quite in the clear yet..")
+            current_pw_guess = "".join(current_pw_guess)
+            current_time = time.time()
+            test2.config(text="quite in the clear yet.")
+            if current_time - bruteforce_phase2_start_time > bruteforce_attack_time_in_minutes * 60 : 
+                firststring = f"{bruteforce_attack_time_in_minutes} minute(s) timeout!" 
+                test.config(text=firststring)
+                test2.config(text="Your password appears to be secure, well done.")
+                time.sleep(120)
+                #print(f"{bruteforce_attack_time_in_minutes} minute(s) timeout! Your password appears to be secure, well done.")
+               
+        pw_found = True
+   
+        firststring = f"Hey! Your password is: {current_pw_guess}" 
+        test.config(text=firststring)
+        test2.config(text="Your password appears to be secure, well done.")
+        print("Hey! Your password is:", current_pw_guess,
+            "\n please change this. It's not common but you've been hacked now!")
+        time.sleep(120)
+        
+
+#bruteforce 
+'''implementation of the bruteforce technique'''
+def bruteforce(list_of_passwords_to_check_against, actual_password_hash):
+    global pw_found
+
+    for password in list_of_passwords_to_check_against:
+        if hash(password) == actual_password_hash:
+            pw_found = True
+            firststring = f"Hey! Your password is: {password}" 
+            test.config(text=firststring)
+            test2.config(text="Please change this, it's a commonly used password!")
+            print("Hey! your password is:", password,
+                "\n please change this, it's a commonly used password!")
+            return
+
+
 #----- Main -------# 
 
-'''input common password lists as url'''
-url1 = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.json'
-url2 = 'https://raw.githubusercontent.com/berzerk0/Probable-Wordlists/master/Real-Passwords/Top12Thousand-probable-v2.txt'
-url3 = 'https://github.com/danielmiessler/SecLists/blob/master/Passwords/probable-v2-top12000.txt'
 
-pw_list1 = return_as_list(url1)
-pw_list2 = return_as_list(url2)
-pw_list3 = return_as_list(url3)
 
-ultimate_password_list = merge_lists(pw_list1, pw_list2, pw_list3)
+'''gui start'''
 
-'''get user's password'''
-actual_password = pwinput.pwinput(prompt='Please enter your password: ')
+root = Tk()
+root.title("imperva mini")
+root.geometry("500x500")
+root.resizable(width=False, height=False)
 
-'''hash user's password'''
-actual_password_hash = hash(actual_password)
 
-'''Running the Brute Force attack from common password list'''
-bruteforce(ultimate_password_list, actual_password_hash)
+logo = Image.open('logo.png')
+logo = ImageTk.PhotoImage(logo)
+logo_label = Label(image=logo)
+logo_label.image = logo
+logo_label.pack()
 
-'''Continue bruteforcing if password is not in common password list'''
-list_of_possible_pw_characters = list(string.digits + string.ascii_lowercase + string.ascii_uppercase)
-current_pw_guess = ""
+#flag
+pw_found = False
 
-bruteforce_phase2_start_time = time.time() # mark start of bruteforce phase 2
 
-while hash(current_pw_guess) != actual_password_hash:
-    current_pw_guess = random.choices(list_of_possible_pw_characters, k=len(actual_password))
-    current_pw_guess = "".join(current_pw_guess)
-    current_time = time.time()
-    if current_time - bruteforce_phase2_start_time > 60 : #timeout after 1 minute 
-        print("Timeout! Your password appears to be secure, well done.")
-        exit()
+#instructions
+instructions = Label(root, text="please enter your password:", font="Helvetica", pady=5)
+instructions.pack()
 
-print("Hey! Your password is:", current_pw_guess,
-      "\n please change this. It's not common but you've been hacked now!")
+#entry box 
+user_input = StringVar()
+entry_box = Entry(root, show="*", textvariable=user_input)
+entry_box.pack()
+
+
+#thread for bruteforce function            
+def threading():
+    t1=Thread(target=get_user_password_and_start_bruteforce)
+    t1.start()
+    
+#start button
+start_text = StringVar()
+start_btn = Button(root, textvariable=start_text, command=threading, font="Helvetica", bg="#fc03db", fg="black", height=2, width=15)
+start_text.set("start bruteforce")
+start_btn.pack(pady=10)
+
+#text labels 
+test = Label(root, text="", font='Helvetica')
+test.place(x=100, y=320)
+test2 = Label(root, text="", font='Helvetica')
+test2.place(x=100, y=340)
+
+#restart button
+restart_btn = Button(root, text="restart app", font="Helvetica", command=restart_app, height=2, width=15)
+restart_btn.pack(side="bottom", pady=10)
+
+
+root.mainloop()
+
+
+
+
+
+
+
+
+
+
 
 

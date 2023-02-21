@@ -15,6 +15,14 @@
 - how shoudl we implement the password verifier? - pws in 100k list don't currently match verifying conditions 
 - feedback if pw could not be hacked? DONE
 - maybe **pwinput module** instead so *** displayed instead of pw completely hidden? DONE
-- requirements.txt file 
-- gui
-- more sec considerations? 
+- requirements.txt file DONE
+- gui DONE
+- presentation slides
+
+## Requirements 
+
+python >= 3.7
+
+pillow>=9.4.0
+
+`pip3 install -r requirements.txt`
