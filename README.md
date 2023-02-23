@@ -12,22 +12,13 @@ A customisable app that tests passwords against bruteforce attacks
 The user may set up to 3 password lists to test against. We have implemented url read-in for lists in json or txt formats, as this provides a higher flexibility of data sources that can be used
 
 Default lists: 
-- UK NCSC PwnedPasswordsTop100k
-- OWASP Passfault 10k Worst
-- SecLists Top 12k
+- [UK NCSC PwnedPasswordsTop100k](https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.json)
+- [OWASP Passfault 10k Worst](https://github.com/OWASP/passfault/blob/master/wordlists/wordlists/10k-worst-passwords.txt)
+- [SecLists Top 12k](https://github.com/danielmiessler/SecLists/blob/master/Passwords/probable-v2-top12000.txt)
 
 Phase 2: randomised bruteforce timeout can be set by user 
-Default: 1 minute timeout
 
-## To do 
-
-- due to parsing only json lists work for now - we could try to make this work universally (eg. with various lists?) DONE
-- how should we implement the password verifier? - pws in 100k list don't currently match verifying conditions 
-- feedback if pw could not be hacked? DONE
-- maybe **pwinput module** instead so *** displayed instead of pw completely hidden? DONE
-- requirements.txt file DONE
-- gui DONE
-- presentation slides
+The default is set to a 1 minute timeout
 
 ## Running the app
 
