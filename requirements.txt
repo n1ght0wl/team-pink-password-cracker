@@ -1,1 +1,2 @@
 pillow>=9.4.0
+pwinput>=1.0.3
