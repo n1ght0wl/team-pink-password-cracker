@@ -7,7 +7,6 @@
 - [@Androulla](https://github.com/n1ght0wl)
 - [@Jess](https://github.com/jeslyw)
 - [@Cate Di Donato](https://github.com/catedido)
-- [@Yevheniia Bondarenko]()
 
 ## To do 
 
