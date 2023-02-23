@@ -26,3 +26,7 @@ python >= 3.7
 pillow>=9.4.0
 
 `pip3 install -r requirements.txt`
+
+## Screenshots
+
+(https://github.com/n1ght0wl/team-pink-password-cracker/blob/main/logo.png)
