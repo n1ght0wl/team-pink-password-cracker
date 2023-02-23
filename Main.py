@@ -80,6 +80,7 @@ def validate_password(password):
 def get_user_password_and_start_bruteforce():
     global pw_found
     global test
+    global statusbar
 
     '''create common password list'''
     url1 = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.json'
@@ -126,6 +127,12 @@ def get_user_password_and_start_bruteforce():
             current_time = time.time()
             test2.config(text="quite in the clear yet.")
             if current_time - bruteforce_phase2_start_time > bruteforce_attack_time_in_minutes * 60 : 
+                
+                # Update status bar
+                statusbar.destroy()
+                statusbar = Label(root, text="You've beat the password cracker!", width=500, bd=1, relief=SUNKEN, anchor=E)
+                statusbar.pack(side="bottom")
+                
                 firststring = f"{bruteforce_attack_time_in_minutes} minute(s) timeout!" 
                 test.config(text=firststring)
                 test2.config(text="Your password appears to be secure, well done.")
@@ -133,6 +140,10 @@ def get_user_password_and_start_bruteforce():
                 #print(f"{bruteforce_attack_time_in_minutes} minute(s) timeout! Your password appears to be secure, well done.")
                
         pw_found = True
+        #Update status bar
+        statusbar.destroy()
+        statusbar = Label(root, text = "Password cracked!", width=500, bd=1, relief=SUNKEN, anchor=E)
+        statusbar.pack(side='bottom')
    
         firststring = f"Hey! Your password is: {current_pw_guess}" 
         test.config(text=firststring)
@@ -146,10 +157,17 @@ def get_user_password_and_start_bruteforce():
 '''implementation of the bruteforce technique'''
 def bruteforce(list_of_passwords_to_check_against, actual_password_hash):
     global pw_found
+    global statusbar
 
     for password in list_of_passwords_to_check_against:
         if hash(password) == actual_password_hash:
             pw_found = True
+            
+            # Update status bar
+            statusbar.destroy()
+            statusbar = Label(root, text="Password cracked!", width=500, bd=1, relief=SUNKEN, anchor=E)
+            statusbar.pack(side='bottom')
+
             firststring = f"Hey! Your password is: {password}" 
             test.config(text=firststring)
             test2.config(text="Please change this, it's a commonly used password!")
@@ -166,6 +184,10 @@ def bruteforce(list_of_passwords_to_check_against, actual_password_hash):
 
 root = Tk()
 root.title("imperva mini")
+root.iconbitmap('titlebar_logo.ico')
+#If .ico image is not working, can delete line 187 of code and use line 189-190 above instead for logo
+#titlebar_logo = PhotoImage(file='titlebar_logo.png')
+#root.iconphoto(False, titlebar_logo)
 root.geometry("500x500")
 root.resizable(width=False, height=False)
 
@@ -209,11 +231,14 @@ test2.place(x=100, y=340)
 
 #restart button
 restart_btn = Button(root, text="restart app", font="Helvetica", command=restart_app, height=2, width=15)
-restart_btn.pack(side="bottom", pady=10)
+restart_btn.place(x=180, y=400)
 
+#status bar
+statusbar = Label(root, text = "Awaiting password", width=500, bd=1, relief=SUNKEN, anchor=E)
+#status = ttk.Progressbar (root, text="Image: 1 of", bd=1, relief=SUNKEN, anchor=E)
+statusbar.pack(side="bottom")
 
 root.mainloop()
-
 
 
 
