@@ -29,6 +29,7 @@ pillow>=9.4.0
 
 ## Screenshots
 
-Logo             | 
+Logo                         |                          |  
+:-------------------------:|:-------------------------: |:-------------------------: |
+![](https://github.com/n1ght0wl/team-pink-password-cracker/blob/main/logo.png?raw=true) | ![](https://github.com/n1ght0wl/team-pink-password-cracker/blob/main/password_cracker_1.png?raw=true) | ![](https://github.com/n1ght0wl/team-pink-password-cracker/blob/main/password_cracker_2.png?raw=true | ![](https://github.com/n1ght0wl/team-pink-password-cracker/blob/main/password_cracker_3.png?raw=true 
 
-![](https://github.com/n1ght0wl/team-pink-password-cracker/blob/main/logo.png?raw=true) | ![](https://github.com/n1ght0wl/team-pink-password-cracker/blob/main/password_cracker_1.png?raw=true) |
