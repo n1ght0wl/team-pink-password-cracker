@@ -54,28 +54,6 @@ def return_as_list(url):
                 return password_list.split('\n') #treat as txt string
             except Exception as e:
                 print("Error converting data to list:", e) #other conversion error 
-    
-'''function to validate password'''
-def validate_password(password):
-    conds = {
-        "an uppercase letter": lambda s: any(x.isupper() for x in s),
-        "a lowercase letter": lambda s: any(x.islower() for x in s),
-        "a number": lambda s: any(x.isdigit() for x in s),
-        "to be at least 8 characters long": lambda s: len(s) >= 8
-    }
-
-    valid = True
-    for name, cond in conds.items():
-        if not cond(password):
-            print("Your password needs " + name)
-            valid = False
-
-    if valid:
-        print("This password is strong!")
-    else:
-        print("Please try and create a stronger password.")
-    return valid
-
 
 def get_user_password_and_start_bruteforce():
     global pw_found
@@ -214,6 +192,13 @@ entry_box.pack()
 
 #thread for bruteforce function            
 def threading():
+    global statusbar
+
+    # Update status bar
+    statusbar.destroy()
+    statusbar = Label(root, text="Password cracking in progress", width=500, bd=1, relief=SUNKEN, anchor=E)
+    statusbar.pack(side='bottom')
+
     t1=Thread(target=get_user_password_and_start_bruteforce)
     t1.start()
     
@@ -239,8 +224,6 @@ statusbar = Label(root, text = "Awaiting password", width=500, bd=1, relief=SUNK
 statusbar.pack(side="bottom")
 
 root.mainloop()
-
-
 
 
 
